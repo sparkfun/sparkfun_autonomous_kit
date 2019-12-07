@@ -64,6 +64,9 @@ servohat = pi_servo_hat.PiServoHat()
 # Restart Servo Hat
 servohat.restart()
 
+pan_seting_old = 0
+tilt_seting_old = 0
+
 while True:
 	pipein = open("/var/www/html/FIFO_pipan", 'r')
 	line = pipein.readline()
@@ -80,9 +83,14 @@ while True:
 		#	library controls:	Down =  90;	Up =  0
 		tilt_setting = scale(int(line_array[2]), 80, 220, 0, 90)
 
-		servohat.move_servo_position(0, pan_setting, 90)
-		time.sleep(.05)
-		servohat.move_servo_position(1, tilt_setting, 90)
-		time.sleep(.05)
+		if pan_setting != pan_setting_old:
+			pan_setting_old = pan_setting
+			servohat.move_servo_position(0, pan_setting, 90)
+			time.sleep(.05)
+
+		if tilt_setting != tilt_setting_old:
+			tilt_setting_old = tilt_setting
+			servohat.move_servo_position(1, tilt_setting, 90)
+			time.sleep(.05)
 
 pipein.close()
