@@ -72,7 +72,7 @@ test.set_pwm_frequency(50)
 
 # Sweep left from 0 to 90 degrees (Channel 0)
 for i in range(0, 90):
-    print("Input: ", end = '')
+    print(" Horz. Input: ", end = '')
     print(i, end = '')
     test.move_servo_position(0, i, 90)
     print(" Estimated Pos: ", end = '')
@@ -80,7 +80,7 @@ for i in range(0, 90):
 
 # Tilt up from 90 to 0 degrees (Channel 1)
 for i in range(90, 0, -1):
-    print("Input: ", end = '')
+    print("Vert. Input: ", end = '')
     print(i, end = '')
     test.move_servo_position(1, i, 90)
     print(" Estimated Pos: ", end = '')
@@ -88,7 +88,7 @@ for i in range(90, 0, -1):
 
 # Sweep right from 90 to 0 degrees (Channel 0)
 for i in range(90, 0, -1):
-    print("Input: ", end = '')
+    print("Horz. Input: ", end = '')
     print(i, end = '')
     test.move_servo_position(0, i, 90)
     print(" Estimated Pos: ", end = '')
@@ -96,7 +96,7 @@ for i in range(90, 0, -1):
 
 # Tilt down from 0 to 90 degrees (Channel 1)
 for i in range(0, 90):
-    print("Input: ", end = '')
+    print("Vert. Input: ", end = '')
     print(i, end = '')
     test.move_servo_position(1, i, 90)
     print(" Estimated Pos: ", end = '')
