@@ -1,2 +1,2 @@
-# SparkFun_Autonomous_Kit
-Python example codes for SparkFun Autonomous Kits
+# SparkFun Autonomous Kit Code
+Python example code for the hardware included in the SparkFun Autonomous Kits
