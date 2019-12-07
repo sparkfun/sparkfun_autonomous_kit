@@ -80,8 +80,8 @@ while True:
 
 		try:
 			ToF.SensorInit()
-            Print("Forward sensor initialized.")
-            break
+			print("Forward sensor initialized.")
+			break
 
 		except Exception as e:
 			if e == OSError or e == IOError:
@@ -92,17 +92,17 @@ while True:
 
 while True:
 	try:
-        # Start Measurements
-        ToF.StartRanging()
-        time.sleep(.005)
-		
-        # Take Measurements
+		# Start Measurements
+		ToF.StartRanging()
+		time.sleep(.005)
+
+		# Take Measurements
 		distance = ToF.GetDistance()
-        time.sleep(.005)
-        
+		time.sleep(.005)
+
 		# Stop Measurements
 		ToF.StopRanging()
-        
+ 
 		print("Distance(mm): %s" % distance)
 
 	except Exception as e:

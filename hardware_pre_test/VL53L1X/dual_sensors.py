@@ -71,7 +71,7 @@ while True:
 		device_address = int(device_address)
 	except ValueError:
 		print("Invalid input. Input needs to be an integer.")
-	
+
 	if device_address not in avail_addresses:
 		print("Invalid selection. Select an available address from the list: ", avail_addresses)
 	else:
@@ -80,8 +80,8 @@ while True:
 
 		try:
 			ToF_front.SensorInit()
-            Print("Forward sensor initialized.")
-            break
+			print("Forward sensor initialized.")
+			break
 
 		except Exception as e:
 			if e == OSError or e == IOError:
@@ -97,7 +97,7 @@ while True:
 		device_address = int(device_address)
 	except ValueError:
 		print("Invalid input. Input needs to be an integer.")
-	
+
 	if device_address not in avail_addresses:
 		print("Invalid selection. Select an available address from the list: ", avail_addresses)
 	else:
@@ -106,8 +106,8 @@ while True:
 
 		try:
 			ToF_rear.SensorInit()
-            Print("Rear sensor initialized.")
-            break
+			print("Rear sensor initialized.")
+			break
 
 		except Exception as e:
 			if e == OSError or e == IOError:
@@ -118,22 +118,22 @@ while True:
 
 while True:
 	try:
-        # Start Measurements
-        ToF_front.StartRanging()
-        time.sleep(.005)
+		# Start Measurements
+		ToF_front.StartRanging()
+		time.sleep(.005)
 		ToF_rear.StartRanging()
 		time.sleep(.005)
 
-        # Take Measurements
+		# Take Measurements
 		fwd_distance = ToF_front.GetDistance()
-        time.sleep(.005)
-        rear_distance = ToF_rear.GetDistance()
-        time.sleep(.005)
+		time.sleep(.005)
+		rear_distance = ToF_rear.GetDistance()
+		time.sleep(.005)
 
 		# Stop Measurements
 		ToF_front.StopRanging()
-        time.sleep(.005)
-        ToF_rear.StopRanging()
+		time.sleep(.005)
+		ToF_rear.StopRanging()
 
 		print("Forward Distance(mm): %s    Rear Distance(mm): %s" % (fwd_distance, rear_distance))
 
