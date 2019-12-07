@@ -65,7 +65,7 @@ print("Hex: ", [hex(x) for x in avail_addresses])
 print("Dec: ", [int(x) for x in avail_addresses])
 
 while True:
-	device_address = input("Select the address of the front sensor (dec): ")
+	device_address = input("Select the address of the sensor (dec): ")
 
 	try:
 		device_address = int(device_address)
