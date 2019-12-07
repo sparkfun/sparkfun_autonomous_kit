@@ -9,11 +9,13 @@
 # License: This code is public domain but you buy me a beer if you use
 # this and we meet someday (Beerware license).
 #
-# Compatibility: https://www.sparkfun.com/products/14667
+# Compatibility:
+# 	VL53L1X: https://www.sparkfun.com/products/14667
+#	Pi Servo pHat: https://www.sparkfun.com/products/15316
 # 
 # Do you like this library? Help support SparkFun. Buy a board!
-# For more information on Pi Servo Hat, check out the product page
-# linked above.
+# For more information on VL53L1x ToF or Pi Servo Hat, check out the
+# product page linked above.
 #
 # This program is distributed in the hope that it will be useful, but
 # WITHOUT ANY WARRANTY without even the implied warranty of
@@ -59,14 +61,90 @@ os.system('i2cdetect -y 1')
 # Scans I2C addresses
 avail_addresses = qwiic.scan()
 
-# Removes I2C addresses of Pi Servo pHat
-try:
-	avail_addresses.remove(0x40)
-	avail_addresses.remove(0x70)
-except ValueError:
-	print("Addresses for Pi Servo pHat (0x40 and 0x70) not in scanned addresses.")
+# Check I2C addresses for Pi Servo pHat
+while 0x40 in avail_addresses:
+	print("Pi Servo pHAT detected on I2C bus at default address (0x40 or 64).")
 
-print("Possible VL53L1X addresses: ")
+	# Is the Pi Servo pHat on the I2C bus?
+	pi_hat = input("Is the Pi Servo pHat on the I2C bus? (y or n)")
+
+	if pi_hat == "y" or pi_hat == "Y":
+		if 0x70 in avail_addresses:
+			print("General Call Address detected on I2C bus. Also, shared with Qwiic Mux.")
+
+			# Does the General Call Address need to beed disabled?
+			gc = input("Does the General Call Address need to beed disabled (required to use Qwiic Mux)? (y or n)")
+
+			if gc == "y" or gc == "Y":
+				# Disable the General Call Address if it is (shared with Mux)
+				pca = qwiic.QwiicPCA9685()
+				pca.set_addr_bit(0, 0)
+
+				# Re-scans I2C addresses
+				avail_addresses = qwiic.scan()
+
+		# Remove Pi Servo pHat from avail_address list
+		try:
+			avail_addresses.remove(0x40)
+		except ValueError:
+			print("Addresses for Pi Servo pHat (0x40) not in scanned addresses.")
+
+	else:
+		break
+
+
+# Check I2C addresses for VL53L1X
+while 0x29 not in avail_addresses:
+	print("VL53L1X ToF sensor not detected on I2C bus at default address (0x29 or 41).")
+
+	# Is the VL53L1X attached to the Mux?
+	vl = input("Is the VL53L1X ToF attached to a Qwiic Mux? (y or n)")
+
+	if vl == "y" or vl == "Y":
+		# Does a channel on the Mux need to be enabled?
+		ch = input("Does a channel on the Qwiic Mux need to be enabled? (y or n)")
+		
+		if ch == "y" or ch == "Y":
+			while 0x29 not in avail_addresses:
+				mux = qwiic.QwiicTDA9548A()
+
+				# Display Mux Configuration
+				print("Mux Configuration:")
+				print("-------------------")
+				mux.list_channels()
+
+				# Which channel on the Mux needs to be enabled?
+				en_ch = input("Which channel on the Qwiic Mux needs to be enabled? (0-7)")
+
+				# Check Entry
+				while type(en_ch) != int and type(en_ch) != list:
+					print("Invalid input. Input needs to be an integer.")
+					en_ch = input("Which channel on the Qwiic Mux needs to be enabled? (0-7)")
+
+				while en_ch < 0 or 7 < en_ch:
+					print("Input outside range of available channels on Qwiic mux (0-7).")
+					en_ch = input("Which channel on the Qwiic Mux needs to be enabled? (0-7)")
+				
+				# Enable Channel
+				try:
+					mux.enable_channels(en_ch)
+				except Exception as e:
+					print(e)
+
+				# Scans I2C addresses
+				avail_addresses = qwiic.scan()
+
+		if (vl == "n" or vl == "N") or (ch == "n" or ch == "N"):
+			# Is the VL53L1X at another address?
+			adr = input("Is the VL53L1X ToF at another address? (y or n)")
+
+			if adr == "n" or adr =="N":
+				print("Check connection. Device not found.")
+				continue
+			elif adr == "y" or adr =="Y":
+				break
+
+print("Possible VL53L1X addresses (Default = 0x29 or 41):")
 print("Hex: ", [hex(x) for x in avail_addresses])
 print("Dec: ", [int(x) for x in avail_addresses])
 
@@ -104,10 +182,12 @@ while True:
 	except ValueError:
 		print("Invalid input. Input needs to be an integer.")
 	
-	if new_address == 0x40 or new_address == 0x70:
-		print("Unavailable address. Addresses is reserved for the Pi Servo pHat are 0x40 and 0x70.")
+	if new_address == 0x40:
+		print("Unavailable address. Address (0x40) is reserved for the Pi Servo pHat.")
+	elif new_address == 0x70 and (vl == "y" or vl == "Y"):
+		print("Unavailable address. Address (0x70) is reserved for the Qwiic Mux.")
 	elif new_address == 0x10:
-		print("Unavailable address. Addresses is reserved for the Titan GPS is 0x10.")
+		print("Unavailable address. Address (0x10) is reserved for the Titan GPS.")
 	elif new_address == device_address:
 		print("Not a ner address. Device already has that I2C address: ", device_address)
 	elif new_address > 119 or new_address < 8:
@@ -120,30 +200,21 @@ while True:
 
 			if keep == "y" or keep == "Y":
 				print("I2C Address Change")
-
-				try:
-					ToF.SetI2CAddress(new_address)
-				except Exception as e:
-					if e == OSError or e == IOError:
-						print("Issue connecting to device.")
-						print(e)
-					else:
-						print(e)
-				else:
-					print("Address change to new address (", hex(new_address), ") is complete.")
-					break
-		else:
-			try:
-				ToF.SetI2CAddress(new_address)
-			except Exception as e:
-				if e == OSError or e == IOError:
-					print("Issue connecting to device.")
-					print(e)
-				else:
-					print(e)
+				continue
 			else:
-				print("Address change to new address (", hex(new_address), ") is complete.")
-				break
+				exit()
+
+		try:
+			ToF.SetI2CAddress(new_address)
+		except Exception as e:
+			if e == OSError or e == IOError:
+				print("Issue connecting to device.")
+				print(e)
+			else:
+				print(e)
+		else:
+			print("Address change to new address (", hex(new_address), ") is complete.")
+			break
 			
 
 # Print out from i2cdetect
