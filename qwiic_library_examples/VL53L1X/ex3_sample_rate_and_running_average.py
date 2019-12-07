@@ -60,7 +60,7 @@
 """
 
 import qwiic
-import time statistics
+import time, statistics
 
 print("VL53L1X Qwiic Test\n")
 ToF = qwiic.QwiicVL53L1X()
