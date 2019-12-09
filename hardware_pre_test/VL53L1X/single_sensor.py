@@ -60,6 +60,82 @@ os.system('i2cdetect -y 1')
 # Scans I2C addresses
 avail_addresses = qwiic.scan()
 
+# Check I2C addresses for Pi Servo pHat
+while 0x40 in avail_addresses:
+	print("Pi Servo pHAT detected on I2C bus at default address (0x40 or 64).")
+
+	# Is the Pi Servo pHat on the I2C bus?
+	pi_hat = input("Is the Pi Servo pHat on the I2C bus? (y or n)")
+
+	if pi_hat == "y" or pi_hat == "Y":
+		if 0x70 in avail_addresses:
+			print("General Call Address detected on I2C bus. Also, shared with Qwiic Mux.")
+
+			# Does the General Call Address need to beed disabled?
+			gc = input("Does the General Call Address need to beed disabled (required to use Qwiic Mux)? (y or n)")
+
+			if gc == "y" or gc == "Y":
+				# Disable the General Call Address if it is (shared with Mux)
+				pca = qwiic.QwiicPCA9685()
+				pca.set_addr_bit(0, 0)
+
+				# Re-scans I2C addresses
+				avail_addresses = qwiic.scan()
+
+		# Remove Pi Servo pHat from avail_address list
+		try:
+			avail_addresses.remove(0x40)
+		except ValueError:
+			print("Addresses for Pi Servo pHat (0x40) not in scanned addresses.")
+
+	else:
+		break
+
+print("Available device addresses: ")
+print("Hex: ", [hex(x) for x in avail_addresses])
+print("Dec: ", [int(x) for x in avail_addresses])
+
+# Does a channel on the Mux need to be enabled?
+ch = input("Does a channel on the Qwiic Mux need to be enabled? (y or n)")
+
+while ch == "y" or ch == "Y":
+	mux = qwiic.QwiicTDA9548A()
+
+	# Display Mux Configuration
+	print("Mux Configuration:")
+	print("-------------------")
+	mux.list_channels()
+
+	# Which channel on the Mux needs to be enabled?
+	en_ch = input("Which channel(s) on the Qwiic Mux needs to be enabled? (0-7)")
+
+	# Check Entry
+	while type(en_ch) != int and type(en_ch) != list:
+		print("Invalid input. Input needs to be an integer or list.")
+		en_ch = input("Which channel(s) on the Qwiic Mux needs to be enabled? (0-7)")
+
+	while True:
+		for x in en_ch:
+			if en_ch < 0 or 7 < en_ch:
+				print("Input outside range of available channels on Qwiic mux (0-7).")
+				en_ch = input("Which channel(s) on the Qwiic Mux needs to be enabled? (0-7)")
+	
+	# Enable Channel
+	try:
+		mux.enable_channels(en_ch)
+	except Exception as e:
+		print(e)
+
+	# Scans I2C addresses
+	avail_addresses = qwiic.scan()
+
+	print("Available device addresses: ")
+	print("Hex: ", [hex(x) for x in avail_addresses])
+	print("Dec: ", [int(x) for x in avail_addresses])
+	
+	# Does a channel on the Mux need to be enabled?
+	ch = input("Does another channel on the Qwiic Mux still need to be enabled? (y or n)")
+
 print("Available device addresses: ")
 print("Hex: ", [hex(x) for x in avail_addresses])
 print("Dec: ", [int(x) for x in avail_addresses])
