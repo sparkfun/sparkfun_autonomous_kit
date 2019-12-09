@@ -1,3 +1,5 @@
+<img alt="sphero rvr" src="https://cdn.sparkfun.com/assets/parts/1/3/8/0/5/15303-SparkFun_Advanced_Autonomous_Kit_for_Sphero_RVR-12.jpg"  align="right" width=320> 
+
 # SparkFun Autonomous Kit Code
 Python example code for the hardware included in the SparkFun Autonomous Kits. This repository is included in the home directory of the pre-configured image. This is primarily for users looking to build their own images and to make updating files simple for users.
 
