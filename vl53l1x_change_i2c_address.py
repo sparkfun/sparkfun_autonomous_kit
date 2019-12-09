@@ -2,7 +2,7 @@
 # VL53L1X - I2C Address Change (Adv. Autonomous Kit)
 #-----------------------------------------------------------------------
 #
-# Ported by  SparkFun Electronics, October 2019
+# Written by  SparkFun Electronics, October 2019
 # Author: Wes Furuya
 # SparkFun Electronics
 # 

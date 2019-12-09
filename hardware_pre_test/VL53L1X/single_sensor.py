@@ -2,7 +2,7 @@
 # Autonoumous Kit - Test ToF (Single)
 #-----------------------------------------------------------------------
 #
-# Ported by  SparkFun Electronics, October 2019
+# Written by  SparkFun Electronics, October 2019
 # Author: Wes Furuya
 # SparkFun Electronics
 # 
