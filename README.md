@@ -23,6 +23,12 @@ Then move the `piservohat_web_interface_firmware.py` into the the `RPi_Cam_Web_I
 
 
 ## Pulling Repository (for Changes/Updates)
-Use the pull command to download any updates or changes from the repository:
+Use the pull command to download any updates or changes from the repository.
+
+First, change directories into the `sparkfun_autonomous_kit` folder from the download location:
+
+`cd sparkfun_autonomous_kit`
+
+Then pull the repository for updates.
 
 `git pull https://github.com/sparkfun/sparkfun_autonomous_kit`
