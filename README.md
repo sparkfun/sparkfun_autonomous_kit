@@ -17,7 +17,7 @@ First, change directories into the `sparkfun_autonomous_kit` folder from the dow
 
 `cd sparkfun_autonomous_kit`
 
-Then move the `piservohat_web_interface_firmware.py` into the the `RPi_Cam_Web_Interface folder`.
+Then, move the `piservohat_web_interface_firmware.py` into the the `RPi_Cam_Web_Interface folder`.
 
 `mv piservohat_web_interface_firmware.py ~\RPi_Cam_Web_Interface folder`
 
@@ -29,6 +29,6 @@ First, change directories into the `sparkfun_autonomous_kit` folder from the dow
 
 `cd sparkfun_autonomous_kit`
 
-Then pull the repository for updates.
+Then, pull the repository for updates.
 
 `git pull https://github.com/sparkfun/sparkfun_autonomous_kit`
