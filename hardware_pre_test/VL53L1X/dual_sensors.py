@@ -112,7 +112,7 @@ mux.list_channels()
 # Does a channel on the Mux need to be enabled?
 ch = input("Does a channel on the Qwiic Mux need to be enabled? (y or n)")
 
-while ch == "y" or ch == "Y":
+while ch != "n" or ch != "N":
 	# Which channel on the Mux needs to be enabled?
 	en_ch = input("Which channel on the Qwiic Mux needs to be enabled? (0-7)")
 
