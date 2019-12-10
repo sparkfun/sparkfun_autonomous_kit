@@ -51,6 +51,10 @@
 import os, sys, time
 import qwiic
 
+# Connect to Mux
+mux = qwiic.QwiicTCA9548A()
+# Initially Disable All Channels
+mux.disable_all()
 
 print("Running VL53L1X I2C Address Change")
 
@@ -98,11 +102,6 @@ while 0x40 in avail_addresses:
 
 	else:
 		break
-
-# Connect to Mux
-mux = qwiic.QwiicTCA9548A()
-# Initially Disable All Channels
-mux.disable_all()
 
 # Check I2C addresses for VL53L1X
 while 0x29 not in avail_addresses:
