@@ -104,41 +104,40 @@ while 0x29 not in avail_addresses:
 		# Does a channel on the Mux need to be enabled?
 		ch = input("Does a channel on the Qwiic Mux need to be enabled? (y or n)")
 		
-		if ch == "y" or ch == "Y":
+		while ch == "y" or ch == "Y":
+			mux = qwiic.QwiicTCA9548A()
+
+			# Display Mux Configuration
+			print("Mux Configuration:")
+			print("-------------------")
+			mux.list_channels()
+
+			# Which channel on the Mux needs to be enabled?
+			en_ch = input("Which channel on the Qwiic Mux needs to be enabled? (0-7)")
+
+			# Check Entry
+			try int(en_ch):
+				while en_ch < 0 or 7 < en_ch:
+					print("Input outside range of available channels on Qwiic mux (0-7).")
+					en_ch = input("Which channel on the Qwiic Mux needs to be enabled? (0-7)")
+			except:
+				print("Invalid input. Input needs to be an integer or list.")
+				en_ch = input("Which channel on the Qwiic Mux needs to be enabled? (0-7)")
+			
+			# Enable Channel
+			try:
+				mux.enable_channels(en_ch)
+			except Exception as e:
+				print(e)
+
+			# Scans I2C addresses
+			avail_addresses = qwiic.scan()
+
 			while 0x29 not in avail_addresses:
-				mux = qwiic.QwiicTCA9548A()
-
-				# Display Mux Configuration
-				print("Mux Configuration:")
-				print("-------------------")
-				mux.list_channels()
-
-				# Which channel on the Mux needs to be enabled?
-				en_ch = input("Which channel(s) on the Qwiic Mux needs to be enabled? (0-7)")
-
-				# Check Entry
-				while type(en_ch) != int and type(en_ch) != list:
-					print("Invalid input. Input needs to be an integer or list.")
-					en_ch = input("Which channel(s) on the Qwiic Mux needs to be enabled? (0-7)")
-
-				if type(en_ch) == list:
-					for x in en_ch:
-						while en_ch < 0 or 7 < en_ch:
-							print("Input outside range of available channels on Qwiic mux (0-7).")
-							en_ch = input("Which channel(s) on the Qwiic Mux needs to be enabled? (0-7)")
-				elif type(en_ch) == int:
-					while en_ch < 0 or 7 < en_ch:
-						print("Input outside range of available channels on Qwiic mux (0-7).")
-						en_ch = input("Which channel(s) on the Qwiic Mux needs to be enabled? (0-7)")
-				
-				# Enable Channel
-				try:
-					mux.enable_channels(en_ch)
-				except Exception as e:
-					print(e)
-
-				# Scans I2C addresses
-				avail_addresses = qwiic.scan()
+				print("VL53L1X ToF sensor not detected on I2C bus at default address (0x29 or 41).)
+				# Does a channel on the Mux need to be enabled?
+			
+			ch = input("Does another channel on the Qwiic Mux need to be enabled? (y or n)")
 
 		if (vl == "n" or vl == "N") or (ch == "n" or ch == "N"):
 			# Is the VL53L1X at another address?
