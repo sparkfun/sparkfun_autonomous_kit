@@ -106,7 +106,7 @@ while 0x29 not in avail_addresses:
 		
 		if ch == "y" or ch == "Y":
 			while 0x29 not in avail_addresses:
-				mux = qwiic.QwiicTDA9548A()
+				mux = qwiic.QwiicTCA9548A()
 
 				# Display Mux Configuration
 				print("Mux Configuration:")

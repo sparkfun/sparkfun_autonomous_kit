@@ -99,7 +99,7 @@ print("Dec: ", [int(x) for x in avail_addresses])
 ch = input("Does a channel on the Qwiic Mux need to be enabled? (y or n)")
 
 while ch == "y" or ch == "Y":
-	mux = qwiic.QwiicTDA9548A()
+	mux = qwiic.QwiicTCA9548A()
 
 	# Display Mux Configuration
 	print("Mux Configuration:")
