@@ -92,6 +92,10 @@ while 0x40 in avail_addresses:
 	else:
 		break
 
+# Connect to Mux
+mux = qwiic.QwiicTCA9548A()
+# Initially Disable All Channels
+mux.disable_all()
 
 # Check I2C addresses for VL53L1X
 while 0x29 not in avail_addresses:
@@ -105,8 +109,6 @@ while 0x29 not in avail_addresses:
 		ch = input("Does a channel on the Qwiic Mux need to be enabled? (y or n)")
 		
 		while ch == "y" or ch == "Y":
-			mux = qwiic.QwiicTCA9548A()
-
 			# Display Mux Configuration
 			print("Mux Configuration:")
 			print("-------------------")
