@@ -121,11 +121,15 @@ while 0x29 not in avail_addresses:
 					print("Invalid input. Input needs to be an integer or list.")
 					en_ch = input("Which channel(s) on the Qwiic Mux needs to be enabled? (0-7)")
 
-				while True:
+				if type(en_ch) == list:
 					for x in en_ch:
-						if en_ch < 0 or 7 < en_ch:
+						while en_ch < 0 or 7 < en_ch:
 							print("Input outside range of available channels on Qwiic mux (0-7).")
 							en_ch = input("Which channel(s) on the Qwiic Mux needs to be enabled? (0-7)")
+				elif type(en_ch) == int:
+					while en_ch < 0 or 7 < en_ch:
+						print("Input outside range of available channels on Qwiic mux (0-7).")
+						en_ch = input("Which channel(s) on the Qwiic Mux needs to be enabled? (0-7)")
 				
 				# Enable Channel
 				try:
