@@ -80,6 +80,13 @@ while 0x40 in avail_addresses:
 				pca = qwiic.QwiicPCA9685()
 				pca.set_addr_bit(0, 0)
 
+				# Print out from i2cdetect
+				print("Running: i2cdetect -y 1")
+				os.system('i2cdetect -y 1')
+
+				print("Hex: ", [hex(x) for x in avail_addresses])
+				print("Dec: ", [int(x) for x in avail_addresses])
+
 				# Re-scans I2C addresses
 				avail_addresses = qwiic.scan()
 
@@ -102,7 +109,7 @@ while 0x29 not in avail_addresses:
 	print("VL53L1X ToF sensor not detected on I2C bus at default address (0x29 or 41).")
 
 	# Is the VL53L1X attached to the Mux?
-	vl = input("Is the VL53L1X ToF attached to a Qwiic Mux? (y or n)")
+	vl = input("Is the VL53L1X ToF attached to the Qwiic Mux? (y or n)")
 
 	if vl == "y" or vl == "Y":
 		# Display Mux Configuration
@@ -113,9 +120,9 @@ while 0x29 not in avail_addresses:
 		# Does a channel on the Mux need to be enabled?
 		ch = input("Does a channel on the Qwiic Mux need to be enabled? (y or n)")
 		
-		while ch == "y" or ch == "Y":
+		if ch == "y" or ch == "Y":
 			# Which channel on the Mux needs to be enabled?
-			en_ch = input("Which channel on the Qwiic Mux needs to be enabled? (0-7)")
+			en_ch = input("Which channel on the Qwiic Mux is the VL53L1X ToF attached? (0-7)")
 
 			# Check Entry
 			try:
@@ -124,43 +131,32 @@ while 0x29 not in avail_addresses:
 					print("Input outside range of available channels on Qwiic mux (0-7).")
 					en_ch = input("Which channel on the Qwiic Mux needs to be enabled? (0-7)")
 					en_ch = int(en_ch)
+
+				# Enable Channel
+				try:
+					mux.enable_channels(en_ch)
+				except Exception as e:
+					print(e)
+
 			except ValueError:
 				print("Invalid input. Input needs to be an integer.")
-				en_ch = input("Which channel on the Qwiic Mux needs to be enabled? (0-7)")
-			
-			# Enable Channel
-			try:
-				mux.enable_channels(en_ch)
-			except Exception as e:
-				print(e)
 
-			# Scans I2C addresses
-			avail_addresses = qwiic.scan()
+	if (vl == "n" or vl == "N") or (ch == "n" or ch == "N"):
+		# Is the VL53L1X at another address?
+		adr = input("Is the VL53L1X ToF at another address? (y or n)")
 
-			if 0x29 not in avail_addresses:
-				print("VL53L1X ToF sensor not detected on I2C bus at default address (0x29 or 41).")
+		if adr == "n" or adr =="N":
+			print("Check connection. Device not found.")
+			continue
+		elif adr == "y" or adr =="Y":
+			break
+	
+	# Scans I2C addresses
+	avail_addresses = qwiic.scan()
 
-			# Display Mux Configuration
-			print("Mux Configuration:")
-			print("-------------------")
-			mux.list_channels()
-
-			# Does a channel on the Mux need to be enabled?
-			ch = input("Does another channel on the Qwiic Mux need to be enabled? (y or n)")
-
-		if (vl == "n" or vl == "N") or (ch == "n" or ch == "N"):
-			# Is the VL53L1X at another address?
-			adr = input("Is the VL53L1X ToF at another address? (y or n)")
-
-			if adr == "n" or adr =="N":
-				print("Check connection. Device not found.")
-				continue
-			elif adr == "y" or adr =="Y":
-				break
-
-print("Possible VL53L1X addresses (Default = 0x29 or 41):")
-print("Hex: ", [hex(x) for x in avail_addresses])
-print("Dec: ", [int(x) for x in avail_addresses])
+	print("Possible VL53L1X addresses (Default = 0x29 or 41):")
+	print("Hex: ", [hex(x) for x in avail_addresses])
+	print("Dec: ", [int(x) for x in avail_addresses])
 
 while True:
 	device_address = input("Select the address of the device to be changed (dec): ")
@@ -229,7 +225,6 @@ while True:
 		else:
 			print("Address change to new address (", hex(new_address), ") is complete.")
 			break
-			
 
 # Print out from i2cdetect
 print("Running: i2cdetect -y 1")

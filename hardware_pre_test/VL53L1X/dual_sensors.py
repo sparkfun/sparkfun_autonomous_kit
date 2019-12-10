@@ -84,9 +84,13 @@ while 0x40 in avail_addresses:
 				pca = qwiic.QwiicPCA9685()
 				pca.set_addr_bit(0, 0)
 
+				# Print out from i2cdetect
+				print("Running: i2cdetect -y 1")
+				os.system('i2cdetect -y 1')
+
 				# Re-scans I2C addresses
 				avail_addresses = qwiic.scan()
-
+				
 		# Remove Pi Servo pHat from avail_address list
 		try:
 			avail_addresses.remove(0x40)
@@ -119,15 +123,15 @@ while ch == "y" or ch == "Y":
 			print("Input outside range of available channels on Qwiic mux (0-7).")
 			en_ch = input("Which channel on the Qwiic Mux needs to be enabled? (0-7)")
 			en_ch = int(en_ch)
+
+		# Enable Channel
+		try:
+			mux.enable_channels(en_ch)
+		except Exception as e:
+			print(e)
+
 	except ValueError:
 		print("Invalid input. Input needs to be an integer.")
-		en_ch = input("Which channel on the Qwiic Mux needs to be enabled? (0-7)")
-	
-	# Enable Channel
-	try:
-		mux.enable_channels(en_ch)
-	except Exception as e:
-		print(e)
 
 	# Scans I2C addresses
 	avail_addresses = qwiic.scan()
