@@ -149,6 +149,13 @@ while 0x29 not in avail_addresses:
 			print("Check connection. Device not found.")
 			continue
 		elif adr == "y" or adr =="Y":
+			# Scans I2C addresses
+			avail_addresses = qwiic.scan()
+
+			print("Possible VL53L1X addresses (Default = 0x29 or 41):")
+			print("Hex: ", [hex(x) for x in avail_addresses])
+			print("Dec: ", [int(x) for x in avail_addresses])
+
 			break
 	
 	# Scans I2C addresses
