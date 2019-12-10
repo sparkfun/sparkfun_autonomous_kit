@@ -137,7 +137,7 @@ while 0x29 not in avail_addresses:
 			# Scans I2C addresses
 			avail_addresses = qwiic.scan()
 
-			while 0x29 not in avail_addresses:
+			if 0x29 not in avail_addresses:
 				print("VL53L1X ToF sensor not detected on I2C bus at default address (0x29 or 41).")
 
 			# Display Mux Configuration
