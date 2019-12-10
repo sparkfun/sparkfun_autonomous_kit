@@ -136,9 +136,9 @@ while 0x29 not in avail_addresses:
 			avail_addresses = qwiic.scan()
 
 			while 0x29 not in avail_addresses:
-				print("VL53L1X ToF sensor not detected on I2C bus at default address (0x29 or 41).)
-				# Does a channel on the Mux need to be enabled?
+				print("VL53L1X ToF sensor not detected on I2C bus at default address (0x29 or 41).")
 			
+			# Does a channel on the Mux need to be enabled?
 			ch = input("Does another channel on the Qwiic Mux need to be enabled? (y or n)")
 
 		if (vl == "n" or vl == "N") or (ch == "n" or ch == "N"):
