@@ -105,15 +105,15 @@ while 0x29 not in avail_addresses:
 	vl = input("Is the VL53L1X ToF attached to a Qwiic Mux? (y or n)")
 
 	if vl == "y" or vl == "Y":
+		# Display Mux Configuration
+		print("Mux Configuration:")
+		print("-------------------")
+		mux.list_channels()
+
 		# Does a channel on the Mux need to be enabled?
 		ch = input("Does a channel on the Qwiic Mux need to be enabled? (y or n)")
 		
 		while ch == "y" or ch == "Y":
-			# Display Mux Configuration
-			print("Mux Configuration:")
-			print("-------------------")
-			mux.list_channels()
-
 			# Which channel on the Mux needs to be enabled?
 			en_ch = input("Which channel on the Qwiic Mux needs to be enabled? (0-7)")
 
@@ -124,8 +124,8 @@ while 0x29 not in avail_addresses:
 					print("Input outside range of available channels on Qwiic mux (0-7).")
 					en_ch = input("Which channel on the Qwiic Mux needs to be enabled? (0-7)")
 					en_ch = int(en_ch)
-			except:
-				print("Invalid input. Input needs to be an integer or list.")
+			except ValueError:
+				print("Invalid input. Input needs to be an integer.")
 				en_ch = input("Which channel on the Qwiic Mux needs to be enabled? (0-7)")
 			
 			# Enable Channel
@@ -139,7 +139,12 @@ while 0x29 not in avail_addresses:
 
 			while 0x29 not in avail_addresses:
 				print("VL53L1X ToF sensor not detected on I2C bus at default address (0x29 or 41).")
-			
+
+			# Display Mux Configuration
+			print("Mux Configuration:")
+			print("-------------------")
+			mux.list_channels()
+
 			# Does a channel on the Mux need to be enabled?
 			ch = input("Does another channel on the Qwiic Mux need to be enabled? (y or n)")
 
