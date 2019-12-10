@@ -53,6 +53,11 @@
 import os, sys, time
 import qwiic
 
+# Connect to Mux
+mux = qwiic.QwiicTCA9548A()
+# Initially Disable All Channels
+mux.disable_all()
+
 # Print out from i2cdetect
 print("Running: i2cdetect -y 1")
 os.system('i2cdetect -y 1')
@@ -94,11 +99,6 @@ while 0x40 in avail_addresses:
 print("Available device addresses: ")
 print("Hex: ", [hex(x) for x in avail_addresses])
 print("Dec: ", [int(x) for x in avail_addresses])
-
-# Connect to Mux
-mux = qwiic.QwiicTCA9548A()
-# Initially Disable All Channels
-mux.disable_all()
 
 # Display Mux Configuration
 print("Mux Configuration:")
