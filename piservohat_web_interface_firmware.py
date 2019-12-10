@@ -64,8 +64,8 @@ servohat = pi_servo_hat.PiServoHat()
 # Restart Servo Hat
 servohat.restart()
 
-pan_seting_old = 0
-tilt_seting_old = 0
+pan_setting_old = 0
+tilt_setting_old = 0
 
 while True:
 	pipein = open("/var/www/html/FIFO_pipan", 'r')
